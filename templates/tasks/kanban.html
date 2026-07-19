@@ -1,0 +1,246 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Kanban Board
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ project.name }} - Kanban Board</h2>
+
+<p class="text-muted">
+    Drag tasks between columns to change their status.
+</p>
+
+<hr>
+
+<div class="row">
+
+    <!-- TO DO -->
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">To Do</h5>
+            </div>
+
+            <div class="card-body kanban-column"
+                 data-status="To Do"
+                 ondrop="drop(event)"
+                 ondragover="allowDrop(event)">
+
+                {% for task in todo %}
+
+                <div class="card mb-3 shadow-sm task-card"
+                     id="task{{ task.id }}"
+                     data-id="{{ task.id }}"
+                     draggable="true"
+                     ondragstart="drag(event)">
+
+                    <div class="card-body">
+
+                        <h6>{{ task.title }}</h6>
+
+                        <small class="text-muted">
+                            {{ task.description }}
+                        </small>
+
+                        <br><br>
+
+                        <span class="badge bg-info">
+                            {{ task.priority }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted">No tasks</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- IN PROGRESS -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">In Progress</h5>
+            </div>
+
+            <div class="card-body kanban-column"
+                 data-status="In Progress"
+                 ondrop="drop(event)"
+                 ondragover="allowDrop(event)">
+
+                {% for task in in_progress %}
+
+                <div class="card mb-3 shadow-sm task-card"
+                     id="task{{ task.id }}"
+                     data-id="{{ task.id }}"
+                     draggable="true"
+                     ondragstart="drag(event)">
+
+                    <div class="card-body">
+
+    <h6>{{ task.title }}</h6>
+
+    <small class="text-muted">
+        {{ task.description }}
+    </small>
+
+    <br><br>
+
+    <span class="badge bg-warning text-dark">
+        {{ task.priority }}
+    </span>
+
+    <!-- Task Tags -->
+    {% if task.tags %}
+
+    <div class="mt-2">
+
+        {% for tag in task.tags %}
+
+        <span class="badge bg-{{ tag.color }} me-1">
+
+            {{ tag.name }}
+
+        </span>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted">No tasks</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- COMPLETED -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Completed</h5>
+            </div>
+
+            <div class="card-body kanban-column"
+                 data-status="Completed"
+                 ondrop="drop(event)"
+                 ondragover="allowDrop(event)">
+
+                {% for task in completed %}
+
+                <div class="card mb-3 shadow-sm task-card"
+                     id="task{{ task.id }}"
+                     data-id="{{ task.id }}"
+                     draggable="true"
+                     ondragstart="drag(event)">
+
+                    <div class="card-body">
+
+                        <h6>{{ task.title }}</h6>
+
+                        <small class="text-muted">
+                            {{ task.description }}
+                        </small>
+
+                        <br><br>
+
+                        <span class="badge bg-success">
+                            Done
+                        </span>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <p class="text-muted">No tasks</p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<br>
+
+<a href="{{ url_for('task.view_tasks', project_id=project.id) }}"
+   class="btn btn-secondary">
+
+    ← Back to Tasks
+
+</a>
+
+<script>
+
+let draggedTask = null;
+
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function drag(event) {
+    draggedTask = event.currentTarget;
+}
+
+function drop(event) {
+
+    event.preventDefault();
+
+    if (!draggedTask) return;
+
+    const column = event.currentTarget;
+
+    column.appendChild(draggedTask);
+
+    const taskId = draggedTask.dataset.id;
+    const newStatus = column.dataset.status;
+
+    fetch(`/tasks/${taskId}/move`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `status=${encodeURIComponent(newStatus)}`
+    }).then(() => {
+        draggedTask = null;
+    });
+
+}
+
+</script>
+
+{% endblock %}

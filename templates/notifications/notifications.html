@@ -1,0 +1,123 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Notifications
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>🔔 Notifications</h2>
+
+</div>
+
+{% if notifications %}
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <table class="table table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th width="70%">Message</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for note in notifications %}
+
+                <tr>
+
+                    <td>
+
+                        {{ note.message }}
+
+                    </td>
+
+                    <td>
+
+                        {{ note.created_at.strftime("%d %b %Y %I:%M %p") }}
+
+                    </td>
+
+                    <td>
+
+                        {% if note.is_read %}
+
+                            <span class="badge bg-success">
+
+                                Read
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+
+                                Unread
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if not note.is_read %}
+
+                        <a href="{{ url_for('notification.mark_read', id=note.id) }}"
+                           class="btn btn-primary btn-sm">
+
+                            Mark Read
+
+                        </a>
+
+                        {% else %}
+
+                        <button
+                            class="btn btn-secondary btn-sm"
+                            disabled>
+
+                            Done
+
+                        </button>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+    No notifications available.
+
+</div>
+
+{% endif %}
+
+{% endblock %}

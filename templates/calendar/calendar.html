@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Calendar
+{% endblock %}
+
+{% block content %}
+
+<h2>Task Calendar</h2>
+
+<p class="text-muted">
+    View all your task deadlines in one place.
+</p>
+
+<hr>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div id="calendar"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const calendarEl = document.getElementById("calendar");
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+
+        initialView: "dayGridMonth",
+
+        height: 700,
+
+        events: {{ events|tojson }}
+
+    });
+
+    calendar.render();
+
+});
+
+</script>
+
+{% endblock %}

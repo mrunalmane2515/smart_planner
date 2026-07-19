@@ -1,0 +1,234 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Team Analytics
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+    👥 Team Performance Dashboard
+</h2>
+
+<h5 class="text-muted mb-4">
+    Project: {{ project.name }}
+</h5>
+
+{% if top_member %}
+
+<div class="card border-success shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h4>🏆 Top Performer</h4>
+
+        <h5>{{ top_member.member.user.full_name }}</h5>
+
+        <p class="mb-0">
+
+            Completed
+            <strong>{{ top_member.completed }}</strong>
+            out of
+            <strong>{{ top_member.assigned }}</strong>
+            assigned tasks.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% if stats %}
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+            <th>Member</th>
+            <th>Role</th>
+            <th>Assigned</th>
+            <th>Completed</th>
+            <th>Pending</th>
+            <th>Completion</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for item in stats %}
+
+        <tr>
+
+            <td>
+                <strong>{{ item.member.user.full_name }}</strong>
+                <br>
+                <small class="text-muted">
+                    {{ item.member.user.email }}
+                </small>
+            </td>
+
+            <td>
+                <span class="badge bg-primary">
+                    {{ item.member.role }}
+                </span>
+            </td>
+
+            <td>{{ item.assigned }}</td>
+
+            <td>
+                <span class="text-success fw-bold">
+                    {{ item.completed }}
+                </span>
+            </td>
+
+            <td>
+                <span class="text-warning fw-bold">
+                    {{ item.pending }}
+                </span>
+            </td>
+
+            <td width="250">
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: {{ item.completion }}%;">
+
+                        {{ item.completion }}%
+
+                    </div>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+    No team members found for this project.
+
+</div>
+
+{% endif %}
+
+<hr class="my-5">
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                Assigned Tasks
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="assignedChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow">
+
+            <div class="card-header">
+
+                Completed Tasks
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="completedChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('project.projects') }}"
+   class="btn btn-secondary mt-3">
+
+    ← Back to Projects
+
+</a>
+
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% block scripts %}
+
+<script>
+
+new Chart(document.getElementById("assignedChart"), {
+
+    type: "bar",
+
+    data: {
+
+        labels: {{ member_names | tojson }},
+
+        datasets: [{
+
+            label: "Assigned Tasks",
+
+            data: {{ assigned_counts | tojson }}
+
+        }]
+
+    }
+
+});
+
+new Chart(document.getElementById("completedChart"), {
+
+    type: "bar",
+
+    data: {
+
+        labels: {{ member_names | tojson }},
+
+        datasets: [{
+
+            label: "Completed Tasks",
+
+            data: {{ completed_counts | tojson }}
+
+        }]
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

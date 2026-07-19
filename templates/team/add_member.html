@@ -1,0 +1,87 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Add Team Member
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+                Add Team Member
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        User Email
+
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter registered user's email"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Role
+
+                    </label>
+
+                    <select
+                        name="role"
+                        class="form-select">
+
+                        <option value="Member">Member</option>
+                        <option value="Developer">Developer</option>
+                        <option value="Designer">Designer</option>
+                        <option value="Tester">Tester</option>
+                        <option value="Project Manager">Project Manager</option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    class="btn btn-success">
+
+                    Add Member
+
+                </button>
+
+                <a
+                    href="{{ url_for('team.manage_team', project_id=project.id) }}"
+                    class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

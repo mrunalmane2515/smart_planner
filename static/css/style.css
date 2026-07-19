@@ -1,0 +1,118 @@
+body{
+    background:#f5f6fa;
+}
+
+.card{
+    transition:0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+}
+
+/* ==========================
+   DARK MODE
+========================== */
+
+.dark-mode{
+
+    background:#121212;
+
+    color:white;
+
+    transition:.3s;
+
+}
+
+.dark-mode .card{
+
+    background:#1f1f1f;
+
+    color:white;
+
+}
+
+.dark-mode .table{
+
+    color:white;
+
+}
+
+.dark-mode .table th{
+
+    background:#2c2c2c;
+
+}
+
+.dark-mode .table td{
+
+    background:#1f1f1f;
+
+}
+
+.dark-mode .navbar{
+
+    background:#000 !important;
+
+}
+
+.dark-mode .bg-dark{
+
+    background:#000 !important;
+
+}
+
+.dark-mode .list-group-item{
+
+    background:#1f1f1f;
+
+    color:white;
+
+}
+
+.dark-mode .form-control,
+
+.dark-mode .form-select{
+
+    background:#2c2c2c;
+
+    color:white;
+
+    border-color:#555;
+
+}
+
+.dark-mode .form-control::placeholder{
+
+    color:#bbb;
+
+}
+
+.dark-mode .text-muted{
+
+    color:#bfbfbf !important;
+
+}
+
+.dark-mode hr{
+
+    border-color:#555;
+
+}
+
+.dark-mode .alert{
+
+    color:black;
+
+}
+
+.sidebar{
+    min-height:100vh;
+    position:sticky;
+    top:0;
+}
+
+.main-content{
+    min-height:100vh;
+}

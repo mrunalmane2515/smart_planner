@@ -1,0 +1,213 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Project Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">📊 Project Dashboard</h2>
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-primary shadow-sm text-center">
+            <div class="card-body">
+                <h5>Total Projects</h5>
+                <h2>{{ total_projects }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-success shadow-sm text-center">
+            <div class="card-body">
+                <h5>Total Tasks</h5>
+                <h2>{{ total_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-info shadow-sm text-center">
+            <div class="card-body">
+                <h5>Completed</h5>
+                <h2>{{ completed_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-warning shadow-sm text-center">
+            <div class="card-body">
+                <h5>Pending</h5>
+                <h2>{{ pending_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card shadow mb-4">
+
+    <div class="card-header bg-dark text-white">
+        Project Progress
+    </div>
+
+    <div class="card-body">
+
+        {% if stats %}
+
+        <table class="table table-hover align-middle">
+
+            <thead>
+
+            <tr>
+                <th>Project</th>
+                <th>Total</th>
+                <th>Completed</th>
+                <th>Pending</th>
+                <th width="300">Progress</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in stats %}
+
+            <tr>
+
+                <td>
+                    <strong>{{ item.project.name }}</strong>
+                </td>
+
+                <td>{{ item.total }}</td>
+
+                <td>
+                    <span class="text-success fw-bold">
+                        {{ item.completed }}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="text-warning fw-bold">
+                        {{ item.pending }}
+                    </span>
+                </td>
+
+                <td>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-success"
+                            style="width: {{ item.progress }}%;">
+
+                            {{ item.progress }}%
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="alert alert-info">
+
+            No projects found.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+
+        Project Completion Chart
+
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="projectChart"></canvas>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('project.projects') }}"
+   class="btn btn-secondary mt-4">
+
+    ← Back to Projects
+
+</a>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+const labels = [
+{% for item in stats %}
+"{{ item.project.name }}",
+{% endfor %}
+];
+
+const progress = [
+{% for item in stats %}
+{{ item.progress }},
+{% endfor %}
+];
+
+new Chart(document.getElementById("projectChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:labels,
+
+        datasets:[{
+
+            label:"Completion %",
+
+            data:progress
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        scales:{
+            y:{
+                beginAtZero:true,
+                max:100
+            }
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

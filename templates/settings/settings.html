@@ -1,0 +1,177 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Settings
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            <i class="bi bi-gear-fill"></i>
+            Settings
+        </h2>
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Account -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow h-100">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-circle"></i>
+                        Account
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p><strong>Name:</strong> {{ current_user.full_name }}</p>
+
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+
+                    <a href="{{ url_for('profile.edit_profile') }}"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-pencil-square"></i>
+                        Edit Profile
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Appearance -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow h-100">
+
+                <div class="card-header bg-warning">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-palette-fill"></i>
+                        Appearance
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+
+                        Change between Light and Dark Mode.
+
+                    </p>
+
+                    <a href="{{ url_for('toggle_theme') }}"
+                       class="btn btn-warning">
+
+                        {% if session.get('theme') == 'dark' %}
+
+                            ☀ Light Mode
+
+                        {% else %}
+
+                            🌙 Dark Mode
+
+                        {% endif %}
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Security -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow h-100">
+
+                <div class="card-header bg-danger text-white">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        Security
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+
+                        Change your account password.
+
+                    </p>
+
+                    <a href="{{ url_for('settings.change_password') }}"
+                       class="btn btn-danger">
+
+                        <i class="bi bi-key-fill"></i>
+                        Change Password
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Notifications -->
+
+        <div class="col-md-6">
+
+            <div class="card shadow h-100">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-bell-fill"></i>
+                        Notifications
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+
+                        Manage notification preferences.
+
+                    </p>
+
+                    <button class="btn btn-success" disabled>
+
+                        Coming Soon
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

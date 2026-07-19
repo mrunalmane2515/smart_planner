@@ -1,0 +1,751 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Analytics Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="fw-bold">
+            📊 Analytics Dashboard
+        </h2>
+
+        <p class="text-muted mb-0">
+            Overview of your projects and task performance
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ================= SUMMARY CARDS ================= -->
+
+<div class="row g-4">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 bg-primary text-white">
+
+            <div class="card-body text-center">
+
+                <h6>Total Tasks</h6>
+
+                <h1>{{ total_tasks }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 bg-success text-white">
+
+            <div class="card-body text-center">
+
+                <h6>Completed</h6>
+
+                <h1>{{ completed }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 bg-warning text-dark">
+
+            <div class="card-body text-center">
+
+                <h6>In Progress</h6>
+
+                <h1>{{ in_progress }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow border-0 bg-danger text-white">
+
+            <div class="card-body text-center">
+
+                <h6>Overdue</h6>
+
+                <h1>{{ overdue }}</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= SECOND ROW ================= -->
+
+<div class="row g-4 mt-1">
+
+    <div class="col-lg-6">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header fw-bold">
+
+                🎯 Completion Progress
+
+            </div>
+
+            <div class="card-body">
+
+                <h4 class="mb-3">
+
+                    {{ completion_rate }}%
+
+                </h4>
+
+                <div class="progress" style="height:30px;">
+
+                    <div
+                            class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                            role="progressbar"
+                            style="width: {{ completion_rate }}%;">
+
+                        {{ completion_rate }}%
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header fw-bold">
+
+                📌 Quick Statistics
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered">
+
+                    <tr>
+
+                        <th>To Do</th>
+
+                        <td>{{ todo }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>High Priority</th>
+
+                        <td>{{ high_priority }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Completed</th>
+
+                        <td>{{ completed }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Overdue</th>
+
+                        <td>{{ overdue }}</td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= CHARTS ================= -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow">
+
+            <div class="card-header fw-bold">
+
+                📊 Task Status
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="statusChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow">
+
+            <div class="card-header fw-bold">
+
+                📈 Task Priority
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="priorityChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= NEW CHART ================= -->
+
+<div class="row">
+
+    <div class="col-12">
+
+        <div class="card shadow">
+
+            <div class="card-header fw-bold">
+
+                📅 Weekly Productivity
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="weeklyChart" height="90"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header fw-bold">
+
+                📅 Monthly Task Creation
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="monthlyChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header fw-bold">
+
+                📂 Tasks Per Project
+
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="projectChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+new Chart(document.getElementById("statusChart"),{
+
+    type:"pie",
+
+    data:{
+
+        labels:["Completed","In Progress","To Do"],
+
+        datasets:[{
+
+            data:[
+                {{ completed }},
+                {{ in_progress }},
+                {{ todo }}
+            ]
+
+        }]
+
+    }
+
+});
+
+new Chart(document.getElementById("priorityChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:["High","Medium","Low"],
+
+        datasets:[{
+
+            label:"Tasks",
+
+            data:[
+                {{ high }},
+                {{ medium }},
+                {{ low }}
+            ]
+
+        }]
+
+    }
+
+});
+
+new Chart(document.getElementById("weeklyChart"),{
+
+    type:"line",
+
+    data:{
+
+        labels:[
+            {% for day in week_labels %}
+            "{{ day }}",
+            {% endfor %}
+        ],
+
+        datasets:[{
+
+            label:"Completed Tasks",
+
+            data:[
+                {% for value in week_values %}
+                {{ value }},
+                {% endfor %}
+            ],
+
+            fill:true,
+
+            tension:0.4
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+
+            legend:{
+
+                display:true
+
+            }
+
+        }
+
+    }
+
+});
+
+new Chart(document.getElementById("monthlyChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:[
+            {% for month in monthly_labels %}
+            "{{ month }}",
+            {% endfor %}
+        ],
+
+        datasets:[{
+
+            label:"Tasks",
+
+            data:[
+                {% for value in monthly_values %}
+                {{ value }},
+                {% endfor %}
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+
+            legend:{
+                display:false
+            }
+
+        }
+
+    }
+
+});
+
+
+new Chart(document.getElementById("projectChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:[
+            {% for project in project_labels %}
+            "{{ project }}",
+            {% endfor %}
+        ],
+
+        datasets:[{
+
+            label:"Tasks",
+
+            data:[
+                {% for value in project_values %}
+                {{ value }},
+                {% endfor %}
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        indexAxis:"y",
+
+        responsive:true
+
+    }
+
+});
+</script>
+
+<!-- ================= DASHBOARD WIDGETS ================= -->
+
+<div class="row mt-4">
+
+    <!-- Upcoming Deadlines -->
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header bg-primary text-white fw-bold">
+
+                📅 Upcoming Deadlines
+
+            </div>
+
+            <div class="card-body">
+
+                {% if upcoming_tasks %}
+
+                    <div class="list-group">
+
+                        {% for task in upcoming_tasks %}
+
+                        <div class="list-group-item">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+
+                                    {{ task.title }}
+
+                                </strong>
+
+                                <span class="badge bg-warning text-dark">
+
+                                    {{ task.due_date }}
+
+                                </span>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                {{ task.priority }} Priority
+
+                            </small>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <p class="text-muted mb-0">
+
+                        No upcoming deadlines.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Overdue Summary -->
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="card shadow h-100">
+
+            <div class="card-header bg-danger text-white fw-bold">
+
+                🚨 Overdue Summary
+
+            </div>
+
+            <div class="card-body text-center">
+
+                <h1 class="display-4 text-danger">
+
+                    {{ overdue }}
+
+                </h1>
+
+                <h5>
+
+                    Overdue Tasks
+
+                </h5>
+
+                <hr>
+
+                {% if overdue == 0 %}
+
+                    <p class="text-success">
+
+                        🎉 Excellent! No overdue tasks.
+
+                    </p>
+
+                {% else %}
+
+                    <p class="text-danger">
+
+                        Please complete overdue tasks as soon as possible.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= PROJECT LEADERBOARD ================= -->
+
+<div class="card shadow mt-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h4 class="mb-0">
+
+            🏆 Project Leaderboard
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if project_stats %}
+
+            {% for project in project_stats %}
+
+            <div class="mb-4">
+
+                <div class="d-flex justify-content-between">
+
+                    <h5>
+
+                        {{ project.name }}
+
+                    </h5>
+
+                    <span class="badge bg-primary">
+
+                        {{ project.progress }}%
+
+                    </span>
+
+                </div>
+
+                <div class="progress mb-2" style="height:22px;">
+
+                    <div
+                        class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                        role="progressbar"
+                        style="width: {{ project.progress }}%;">
+
+                        {{ project.progress }}%
+
+                    </div>
+
+                </div>
+
+                <div class="row text-center">
+
+                    <div class="col-md-4">
+
+                        <div class="card border-primary">
+
+                            <div class="card-body">
+
+                                <h6>Total</h6>
+
+                                <h4>
+
+                                    {{ project.total }}
+
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="card border-success">
+
+                            <div class="card-body">
+
+                                <h6>Completed</h6>
+
+                                <h4>
+
+                                    {{ project.completed }}
+
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="card border-warning">
+
+                            <div class="card-body">
+
+                                <h6>Pending</h6>
+
+                                <h4>
+
+                                    {{ project.pending }}
+
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% if not loop.last %}
+
+                <hr>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-info mb-0">
+
+                No project statistics available.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

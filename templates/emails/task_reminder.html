@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body{
+            font-family:Arial;
+            background:#f4f6f9;
+            padding:30px;
+        }
+
+        .container{
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            max-width:600px;
+            margin:auto;
+            box-shadow:0 5px 20px rgba(0,0,0,.1);
+        }
+
+        h2{
+            color:#0d6efd;
+        }
+
+        .btn{
+            display:inline-block;
+            background:#0d6efd;
+            color:white;
+            padding:12px 20px;
+            text-decoration:none;
+            border-radius:6px;
+            margin-top:20px;
+        }
+
+        .footer{
+            margin-top:25px;
+            color:#888;
+            font-size:14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🎯 New Task Assigned</h2>
+
+<p>Hello,</p>
+
+<p>A new task has been assigned to you.</p>
+
+<hr>
+
+<h3>{{ task_title }}</h3>
+
+<p>
+<strong>Due Date:</strong>
+{{ due_date }}
+</p>
+
+<a href="http://127.0.0.1:5001/dashboard"
+class="btn">
+
+Open Smart Planner
+
+</a>
+
+<div class="footer">
+
+Smart Planner
+</div>
+
+</div>
+
+</body>
+</html>
