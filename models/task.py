@@ -1,5 +1,12 @@
 from models import db
 from datetime import date
+from models.tag import task_tags
+
+tags = db.relationship(
+    "Tag",
+    secondary=task_tags,
+    back_populates="tasks"
+)
 
 class Task(db.Model):
     __tablename__ = "tasks"

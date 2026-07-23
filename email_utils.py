@@ -1,12 +1,13 @@
 from flask_mail import Message
 from flask import render_template
 from extensions import mail
-
+from flask import current_app
 
 def send_task_reminder(user_email, task_title, due_date):
 
     msg = Message(
-        subject="📌 Task Reminder",
+        subject="📌 Smart Planner - Task Reminder",
+        sender=current_app.config["MAIL_USERNAME"],
         recipients=[user_email]
     )
 
@@ -23,7 +24,8 @@ def send_task_reminder(user_email, task_title, due_date):
 def send_task_assigned_email(user_email, task_title, due_date):
 
     msg = Message(
-        subject="🎯 New Task Assigned",
+        subject="📌 Smart Planner - Task Reminder",
+        sender="yourgmail@gmail.com",
         recipients=[user_email]
     )
 

@@ -1,5 +1,5 @@
-import flash
-from flask import Blueprint, render_template, request, redirect, url_for, url_for
+
+from flask import Blueprint, render_template, request, redirect, url_for, flash,url_for
 
 from werkzeug.security import generate_password_hash
 
