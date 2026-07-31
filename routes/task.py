@@ -246,7 +246,7 @@ def add_task(project_id):
         )
     members = project.team_members
     tags = Tag.query.order_by(Tag.name).all()
-
+    print("Tags:", Tag.query.all())
     return render_template(
         "tasks/add_task.html",
         project=project,
