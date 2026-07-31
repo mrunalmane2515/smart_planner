@@ -42,7 +42,7 @@ from extensions import mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
-print(app.config["SECRET_KEY"])
+
 mail.init_app(app)
 
 app.register_blueprint(project)
