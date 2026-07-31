@@ -246,13 +246,17 @@ def add_task(project_id):
         )
     members = project.team_members
     tags = Tag.query.order_by(Tag.name).all()
-    print("Tags:", Tag.query.all())
-    return render_template(
-        "tasks/add_task.html",
-        project=project,
-        members=members,
-        tags = tags
-    )
+
+print("Total Tags:", len(tags))
+for tag in tags:
+    print(tag.id, tag.name)
+
+return render_template(
+    "tasks/add_task.html",
+    project=project,
+    members=members,
+    tags=tags
+)
 
 # ==============================
 # Edit Task
