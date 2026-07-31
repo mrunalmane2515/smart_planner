@@ -78,7 +78,25 @@ def load_user(user_id):
 
 with app.app_context():
     db.create_all()
-    print("Tag Count:", Tag.query.count())
+
+    if Tag.query.count() == 0:
+
+        tags = [
+            Tag(name="Bug", color="danger"),
+            Tag(name="Feature", color="success"),
+            Tag(name="Urgent", color="warning"),
+            Tag(name="Research", color="info"),
+            Tag(name="Design", color="primary"),
+            Tag(name="Backend", color="secondary"),
+            Tag(name="Frontend", color="dark"),
+            Tag(name="Testing", color="success"),
+            Tag(name="Documentation", color="info")
+        ]
+
+        db.session.add_all(tags)
+        db.session.commit()
+
+        print("Default tags inserted.")
 
 
 @app.route("/")
