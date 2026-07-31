@@ -226,15 +226,19 @@ def add_task(project_id):
                 db.session.commit()
 
                 # Send email to assigned member
-                send_task_reminder(
-                    user_email=member.user.email,
-                    task_title=new_task.title,
-                    due_date=new_task.due_date.strftime("%d %b %Y") if new_task.due_date else "No Due Date"
-                )
+                try:
+                    send_task_reminder(
+                        user_email=member.user.email,
+                        task_title=new_task.title,
+                        due_date=new_task.due_date.strftime("%d %b %Y")
+                        if new_task.due_date else "No Due Date"
+                    )
+                except Exception as e:
+                    print("Email failed:", e)
                 log_activity(
-            current_user.id,
-            f'Created task "{new_task.title}"'
-        )
+                    current_user.id,
+                    f'Created task "{new_task.title}"'
+                )
 
         flash("Task added successfully!", "success")
 
