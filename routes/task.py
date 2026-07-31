@@ -346,12 +346,15 @@ def edit_task(task_id):
 
             if member:
                 from email_utils import send_task_reminder
-
-                send_task_reminder(
-                    user_email=member.user.email,
-                    task_title=task_item.title,
-                    due_date=task_item.due_date.strftime("%d %b %Y") if task_item.due_date else "No Due Date"
-                )
+                try:
+                    send_task_reminder(
+                        user_email=member.user.email,
+                        task_title=new_task.title,
+                        due_date=new_task.due_date.strftime("%d %b %Y")
+                        if new_task.due_date else "No Due Date"
+                    )
+                except Exception as e:
+                    print("Email failed:", e)
 
                 notification = Notification(
                     user_id=member.user.id,
