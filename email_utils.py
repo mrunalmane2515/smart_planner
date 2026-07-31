@@ -15,10 +15,13 @@ def send_task_reminder(user_email, task_title, due_date):
         "emails/task_reminder.html",
         task_title=task_title,
         due_date=due_date,
-        dashboard_url="http://127.0.0.1:5001/"
+        dashboard_url="https://smart-planner-x43e.onrender.com/"
     )
-
+try:
     mail.send(msg)
+    print("Email sent successfully")
+except Exception as e:
+    print("Email Error:", e)
 
 
 def send_task_assigned_email(user_email, task_title, due_date):
