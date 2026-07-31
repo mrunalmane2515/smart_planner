@@ -231,7 +231,7 @@ def add_task(project_id):
                     task_title=new_task.title,
                     due_date=new_task.due_date.strftime("%d %b %Y") if new_task.due_date else "No Due Date"
                 )
-        log_activity(
+                log_activity(
             current_user.id,
             f'Created task "{new_task.title}"'
         )
@@ -244,20 +244,20 @@ def add_task(project_id):
                 project_id=project.id
             )
         )
+
+    # ← This is OUTSIDE the POST block, but INSIDE add_task()
+
     members = project.team_members
     tags = Tag.query.order_by(Tag.name).all()
 
-print("Total Tags:", len(tags))
-for tag in tags:
-    print(tag.id, tag.name)
+    print("Tags:", tags)
 
-return render_template(
-    "tasks/add_task.html",
-    project=project,
-    members=members,
-    tags=tags
-)
-
+    return render_template(
+        "tasks/add_task.html",
+        project=project,
+        members=members,
+        tags=tags
+    )
 # ==============================
 # Edit Task
 # ==============================
