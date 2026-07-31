@@ -42,7 +42,8 @@ from extensions import mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
+print("DATABASE_URL:", app.config["SQLALCHEMY_DATABASE_URI"])
+print("SECRET_KEY loaded:", app.config["SECRET_KEY"] is not None)
 mail.init_app(app)
 
 app.register_blueprint(project)
